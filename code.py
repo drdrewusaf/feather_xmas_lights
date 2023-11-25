@@ -119,14 +119,20 @@ def fadeMode(ran):
     currGcol = pwmGcol
     currBcol = pwmBcol
     colorsUpdate()
-    while pwmRcol != currRcol or pwmGcol != currGcol or pwmBcol != currBcol:
+    fadeDone = False
+    while not fadeDone:
         btnCheck()
-        fadeStepper(currRcol, pwmRcol)
-        currRcol = newCurr
-        fadeStepper(currGcol, pwmGcol)
-        currGcol = newCurr
-        fadeStepper(currBcol, pwmBcol)
-        currBcol = newCurr
+        if pwmRcol != currRcol:
+            fadeStepper(currRcol, pwmRcol)
+            currRcol = newCurr
+        elif pwmGcol != currGcol:
+            fadeStepper(currGcol, pwmGcol)
+            currGcol = newCurr
+        elif pwmBcol != currBcol:
+            fadeStepper(currBcol, pwmBcol)
+            currBcol = newCurr
+        else:
+            fadeDone = True
         setDutyCycles(currRcol, currGcol, currBcol)
 
 
@@ -140,7 +146,7 @@ def twinkleMode():
     lastRun = now
     lastTwinkle = now
     twinkleDelay = uniform(0, 1)
-    modeDur = randrange(1, 20, 2)
+    modeDur = randrange(1, 10, 2)
     colorsUpdate()
     pwmRcol = int(pwmRcol - pwmRcol / 5)
     pwmGcol = int(pwmGcol - pwmGcol / 5)
@@ -155,7 +161,7 @@ def twinkleMode():
         if now <= twinkleDelay + lastTwinkle:
             pass
         else:
-            twinkleDelay = uniform(0, 2)
+            twinkleDelay = uniform(0, 1)
             setDutyCycles(maxBright, maxBright, maxBright)
             sleep(.1)
             setDutyCycles(currRcol, currGcol, currBcol)
@@ -168,7 +174,6 @@ def setDutyCycles(r, g, b):
     pwmR.duty_cycle = r
     pwmG.duty_cycle = g
     pwmB.duty_cycle = b
-    print(r, g, b)
 
 
 def btnCheck():
@@ -196,20 +201,15 @@ def main():
                 activeColors = "xmas"
             else:
                 activeColors = "rnd"
-            print(activeColors)
             if mode == 0:
-                print("Mode is", mode)
                 blinkMode()
             elif mode == 1:
-                print("Mode is", mode)
                 fadeMode(ran)
                 ran = True
             elif mode == 2:
-                print("Mode is", mode)
                 twinkleMode()
             elif mode == 3:
                 # all
-                print("Mode is", mode)
                 rndMode = randrange(0, 2, 1)
                 if rndMode == 0:
                     blinkMode()
@@ -221,5 +221,5 @@ def main():
             lastRun = now
 
 
-mode = 0
+mode = 1
 main()
