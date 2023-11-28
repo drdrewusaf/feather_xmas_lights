@@ -15,7 +15,7 @@ btnMode.pull = digitalio.Pull.UP
 swColor = digitalio.DigitalInOut(board.D12)
 swColor.direction = digitalio.Direction.INPUT
 swColor.pull = digitalio.Pull.UP
-maxBright = 65530
+maxBright = 65500
 xmasR = [maxBright, 0, 0, maxBright]
 xmasG = [0, 0, maxBright, maxBright]
 xmasB = [0, maxBright, 0, maxBright]
@@ -42,7 +42,7 @@ def updateBright():
     global xmasG
     global xmasB
     if maxBright - 10000 <= 0:
-        maxBright = 65530
+        maxBright = 65500
         xmasR = [maxBright, 0, 0, maxBright]
         xmasG = [0, 0, maxBright, maxBright]
         xmasB = [0, maxBright, 0, maxBright]
@@ -88,12 +88,12 @@ def xmasColors():
 def fadeStepper(curr, pwm):
     global newCurr
     if curr == pwm:
-        pass
+        newCurr = curr
+        return (newCurr)
     elif curr - pwm > 0:
-        curr = curr - 10
+        newCurr = curr - 20
     else:
-        curr = curr + 10
-    newCurr = curr
+        newCurr = curr + 20
     return (newCurr)
 
 
@@ -119,20 +119,14 @@ def fadeMode(ran):
     currGcol = pwmGcol
     currBcol = pwmBcol
     colorsUpdate()
-    fadeDone = False
-    while not fadeDone:
+    while pwmRcol != currRcol or pwmGcol != currGcol or pwmBcol != currBcol:
         btnCheck()
-        if pwmRcol != currRcol:
-            fadeStepper(currRcol, pwmRcol)
-            currRcol = newCurr
-        elif pwmGcol != currGcol:
-            fadeStepper(currGcol, pwmGcol)
-            currGcol = newCurr
-        elif pwmBcol != currBcol:
-            fadeStepper(currBcol, pwmBcol)
-            currBcol = newCurr
-        else:
-            fadeDone = True
+        fadeStepper(currRcol, pwmRcol)
+        currRcol = newCurr
+        fadeStepper(currGcol, pwmGcol)
+        currGcol = newCurr
+        fadeStepper(currBcol, pwmBcol)
+        currBcol = newCurr
         setDutyCycles(currRcol, currGcol, currBcol)
 
 
