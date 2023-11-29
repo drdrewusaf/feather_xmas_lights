@@ -66,11 +66,11 @@ def rndColors():
     global pwmGcol
     global pwmBcol
     global maxBright
-    rndStep = randrange(100, 10000, 10)
+    rndStep = randrange(100, 10000, 20)
     pwmRcol = randrange(0, maxBright, rndStep)
-    rndStep = randrange(100, 10000, 10)
+    rndStep = randrange(100, 10000, 20)
     pwmGcol = randrange(0, maxBright, rndStep)
-    rndStep = randrange(100, 10000, 10)
+    rndStep = randrange(100, 10000, 20)
     pwmBcol = randrange(0, maxBright, rndStep)
 
 
